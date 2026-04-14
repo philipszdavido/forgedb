@@ -10,4 +10,9 @@
 
 #include <stdio.h>
 
+class Lexer {
+public:
+    
+};
+
 #endif /* lexer_hpp */
