@@ -6,9 +6,24 @@
 //
 
 #include <iostream>
+#include <string>
+#include "./parser/parser.hpp"
+#include "./lexer/lexer.hpp"
+#include "./token/Token.hpp"
 
 int main(int argc, const char * argv[]) {
-    // insert code here...
-    std::cout << "Hello, World!\n";
+    
+    const string sql = R"(
+SELECT * FROM table
+)";
+    
+    Lexer _lex(sql);
+    vector<Token> tokens = _lex.lex();
+    
+    for (int i = 0; i < tokens.size(); i++) {
+        printTokenType(tokens[i].type);
+        std::cout << ' ' << tokens[i].value << std::endl;
+    }
+    
     return EXIT_SUCCESS;
 }
