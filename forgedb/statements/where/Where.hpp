@@ -9,7 +9,7 @@
 #define Where_hpp
 
 #include <stdio.h>
-#include "../../Expression/Expression.hpp"
+#include "expressions/Expression/Expression.hpp"
 
 enum Op {
     OR,
@@ -17,9 +17,10 @@ enum Op {
 };
 
 class Where {
+public:
     Op op;
-    Expression lhs;
-    Expression rhs;
+    std::unique_ptr<Expression> lhs;
+    std::unique_ptr<Expression> rhs;
 };
 
 #endif /* Where_hpp */

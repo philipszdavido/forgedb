@@ -21,6 +21,9 @@ private:
     const std::vector<Token>& tokens;
     size_t index = 0;
 
+    void consumeToken(Token token, string msgError);
+    void consumeTokenType(TokenType type, string msgError);
+    void parseSelect();
     Token current();
     Token next();
     void advance();

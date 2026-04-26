@@ -12,16 +12,25 @@
 #include <string>
 #include <vector>
 
-#include "../statement/Statement.hpp"
-#include "./../where/Where.hpp"
+#include "statements/includes.h"
 
 using namespace std;
 
+struct TableColumn {
+    bool isStar;
+    vector<string> columns;
+};
+
 class Select : Statement {
     string table;
-    vector<string> columns;
+    TableColumn column;
     Where where;
-    // limit
+//    groupBy;
+//    having;
+//    orderBy;
+//    selFlags;
+    int limit;
+    int offset;
 };
 
 #endif /* Select_hpp */

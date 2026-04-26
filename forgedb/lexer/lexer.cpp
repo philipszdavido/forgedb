@@ -13,6 +13,10 @@ unordered_map<string, string> keywords = {
     { "CREATE", "CREATE" },
     { "DELETE", "DELETE" },
     { "FROM", "FROM" },
+    
+    {"LIMIT", "LIMIT"},
+    {"OFFSET", "OFFSET"},
+    {"WHERE", "WHERE"}
 };
 
 Lexer::Lexer(const std::string& sql) : sql(sql) {}
@@ -27,8 +31,28 @@ vector<Token> Lexer::lex() {
                 add(TokenType::EQUALS, c);
                 break;
                 
+            case '<':
+                add(TokenType::LT, c);
+                break;
+                
+            case '>':
+                add(TokenType::GT, c);
+                break;
+                
             case '*':
                 add(TokenType::STAR, c);
+                break;
+                
+            case '(':
+                add(TokenType::LEFT_PAREN, c);
+                break;
+                
+            case ')':
+                add(TokenType::RIGHT_PAREN, c);
+                break;
+                
+            case ',':
+                add(TokenType::COMMA, c);
                 break;
                 
             default:

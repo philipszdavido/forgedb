@@ -9,9 +9,12 @@
 #define Expression_hpp
 
 #include <stdio.h>
+#include <string>
 
 class Expression {
-    
+public:
+    virtual ~Expression() = default;
+    virtual std::string toString() const = 0;
 };
 
 #endif /* Expression_hpp */

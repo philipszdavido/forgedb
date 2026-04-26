@@ -27,3 +27,4 @@ SELECT * FROM table
     
     return EXIT_SUCCESS;
 }
+
