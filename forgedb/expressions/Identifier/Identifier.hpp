@@ -16,12 +16,12 @@ using namespace std;
 
 struct Identifier : public Expression {
 public:
-    string value;
+    string name;
 
-    Identifier(const string& val) : value(val) {}
+    Identifier(const string& val) : name(val) {}
 
     string toString() const override {
-        return "'" + value + "'";
+        return "'" + name + "'";
     }
 };
 

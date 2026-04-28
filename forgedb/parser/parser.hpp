@@ -10,6 +10,8 @@
 
 #include <stdio.h>
 #include "../token/Token.hpp"
+#include "statements/statement/Statement.hpp"
+#include "statements/select/Select.hpp"
 
 class Parser {
     
@@ -23,7 +25,7 @@ private:
 
     void consumeToken(Token token, string msgError);
     void consumeTokenType(TokenType type, string msgError);
-    void parseSelect();
+    unique_ptr<Select> parseSelect();
     Token current();
     Token next();
     void advance();

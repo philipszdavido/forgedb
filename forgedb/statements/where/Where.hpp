@@ -21,6 +21,18 @@ public:
     Op op;
     std::unique_ptr<Expression> lhs;
     std::unique_ptr<Expression> rhs;
+    
+    Where* clone() {
+        
+        auto where = new Where();
+        
+        where->op = this->op;
+        where->lhs = std::move(this->lhs);
+        where->rhs = std::move(this->rhs);
+        
+        return where;
+        
+    }
 };
 
 #endif /* Where_hpp */

@@ -45,6 +45,7 @@ enum class TokenType {
     AND, STAR,
     
     KEYWORD,
+    SECOUNDARY_KEYWORD,
 
     WHITESPACE,
     DELIM,

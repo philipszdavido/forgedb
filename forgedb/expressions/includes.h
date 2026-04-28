@@ -8,7 +8,9 @@
 #ifndef includes_h
 #define includes_h
 
-#includes "./Binary/Binary.hpp"
 #include "./Expression/Expression.hpp"
+#include "Literal/Literal.hpp"
+#include "Identifier/Identifier.hpp"
+#include "./Binary/Binary.hpp"
 
 #endif /* includes_h */

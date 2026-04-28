@@ -12,18 +12,24 @@
 #include <string>
 #include <vector>
 
-#include "statements/includes.h"
+#include "statements/statement/Statement.hpp"
+#include "statements/where/Where.hpp"
 
 using namespace std;
 
+class Select;
+
 struct TableColumn {
     bool isStar;
+    bool isSelect;
     vector<string> columns;
+    unique_ptr<Select> selectColmun;
 };
 
-class Select : Statement {
-    string table;
+class Select : public Statement {
+public:
     TableColumn column;
+    string table;
     Where where;
 //    groupBy;
 //    having;

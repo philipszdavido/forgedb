@@ -27,10 +27,10 @@ enum class BinaryOp {
 class BinaryExpression : public Expression {
 public:
     BinaryOp op;
-    unique_ptr<Expression> lhs;
-    unique_ptr<Expression> rhs;
+    unique_ptr<Expression> left;
+    unique_ptr<Expression> right;
     
-    BinaryExpression(std::unique_ptr<Expression> l, BinaryOp o, std::unique_ptr<Expression> r) : lhs(std::move(l)), op(o), rhs(std::move(r)) {}
+    BinaryExpression(std::unique_ptr<Expression> l, BinaryOp o, std::unique_ptr<Expression> r) : left(std::move(l)), op(o), right(std::move(r)) {}
 };
 
 #endif /* Binary_hpp */

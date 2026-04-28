@@ -19,6 +19,11 @@ unordered_map<string, string> keywords = {
     {"WHERE", "WHERE"}
 };
 
+unordered_map<string, string> secondary_keywords = {
+    {"AS", "AS"},
+    {"OR", "OR"}
+};
+
 Lexer::Lexer(const std::string& sql) : sql(sql) {}
 
 vector<Token> Lexer::lex() {
@@ -86,9 +91,12 @@ void Lexer::collectIdentifier() {
     }
     
     const string kw = keywords[ident];
+    const string sec_kw = secondary_keywords[ident];
+    
     if (kw.size()) {
         add(TokenType::KEYWORD, ident);
-    } else add(TokenType::STRING, ident);
+    } else if(sec_kw.size()) add(TokenType::SECOUNDARY_KEYWORD, ident);
+    else add(TokenType::STRING, ident);
     index--;
     
 }

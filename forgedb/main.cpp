@@ -14,6 +14,7 @@
 int main(int argc, const char * argv[]) {
     
     const string sql = R"(
+SELECT (SELECT * FROM table) FROM users
 SELECT * FROM table
 )";
     

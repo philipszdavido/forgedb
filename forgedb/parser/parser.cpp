@@ -6,7 +6,6 @@
 //
 
 #include "parser.hpp"
-#include "statements/select/Select.hpp"
 
 void Parser::parse() {
     while (!eof()) {
@@ -22,8 +21,8 @@ void Parser::parse() {
     }
 }
 
-void Parser::parseSelect() {
-    auto select = make_unique<Select>();
+unique_ptr<Select> Parser::parseSelect() {
+    unique_ptr<Select> select = make_unique<Select>();
     
     consumeToken(current(), "Expected SELECT");
     
@@ -31,9 +30,58 @@ void Parser::parseSelect() {
     
     if (current().type == TokenType::STAR) {
         
+        select->column.isStar = true;
+        
+    } else if (current().type == TokenType::LEFT_PAREN) {
+        
+        // collect till )
+        unique_ptr<Select> childSelect;
+        while (current().type != TokenType::RIGHT_PAREN) {
+            childSelect = parseSelect();
+        }
+        
+        select->column.isSelect = true;
+        select->column.selectColmun = std::move(childSelect);
+        
     } else {
-        // consume all comma till keyword FROM
+        
+        vector<string> cols;
+        // consume all comma
+        cols.push_back(current().value); advance();
+        
+        while (current().type == TokenType::COMMA) {
+            advance();
+            cols.push_back(current().value); advance();
+        }
+        select->column.isStar = false;
+        select->column.columns = cols;
     }
+    
+    if (current().type == TokenType::KEYWORD && current().value == "FROM") {
+        
+        // pick the table
+        consumeToken(current(), "Expected 'FROM'");
+        select->table = current().value;
+        
+    }
+    
+    // pick WHERE
+    if (current().type == TokenType::KEYWORD && current().value == "WHERE") {
+        advance();
+        
+        auto where = make_unique<Where>();
+        
+        // consume till hit a keyword
+        while (true) {
+            if (current().type == TokenType::KEYWORD || eof()) {
+                break;
+            }
+        }
+        
+    }
+    
+    return select;
+    
 }
 
 void Parser::consumeToken(Token token, string msgError) {
