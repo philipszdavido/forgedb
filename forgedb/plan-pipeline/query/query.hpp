@@ -19,5 +19,6 @@
 using namespace std;
 
 void runQuery(Select& stmt, unordered_map<string, Table>& db);
+void runStmtQuery(Statement* stmt, unordered_map<string, Table>& db);
 
 #endif /* query_hpp */

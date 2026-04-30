@@ -13,7 +13,8 @@ void Parser::parse() {
         
         if (token.type == TokenType::KEYWORD) {
             if (token.value == "SELECT") {
-                parseSelect();
+                auto select = parseSelect();
+                stmts.push_back(std::move(select));
             }
         }
         

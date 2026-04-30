@@ -53,6 +53,37 @@ struct FilterExecutor : Executor {
     }
 };
 
+struct StarColumnProjectionExecutor : Executor {
+    unique_ptr<Executor> input;
+
+    StarColumnProjectionExecutor(unique_ptr<Executor> in)
+        : input(std::move(in)) {}
+
+    bool next(Row& out) override {
+        Row projected;
+        if (!input->next(projected)) return false;
+
+        out = projected;
+        return true;
+    }
+};
+
+struct SelectColumnProjectionExecutor : Executor {
+    unique_ptr<Executor> input;
+
+    SelectColumnProjectionExecutor(unique_ptr<Executor> in,
+                       vector<string> cols)
+        : input(std::move(in)) {}
+
+    bool next(Row& out) override {
+        Row temp;
+        if (!input->next(temp)) return false;
+
+        out = temp;
+        return true;
+    }
+};
+
 struct ProjectionExecutor : Executor {
     unique_ptr<Executor> input;
     vector<string> columns;

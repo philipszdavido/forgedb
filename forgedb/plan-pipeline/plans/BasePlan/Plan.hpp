@@ -16,6 +16,12 @@
 
 using namespace std;
 
+//Table users = {
+//    { {"id", "1"}, {"name", "Alice"}, {"age", "25"} },
+//    { {"id", "2"}, {"name", "Bob"},   {"age", "17"} },
+//    { {"id", "3"}, {"name", "Eve"},   {"age", "30"} }
+//};
+
 using Row = unordered_map<string, string>;
 using Table = vector<Row>;
 
@@ -31,9 +37,21 @@ struct ScanPlan : Plan {
     ScanPlan(const string& t) : table(t) {}
 };
 
-struct StarColumnPlan : Plan {};
-struct VectorColumnPlan : Plan {};
-struct SelectColumnPlan : Plan {};
+struct StarColumnProjectionPlan : Plan {
+    unique_ptr<Plan> input;
+    
+    StarColumnProjectionPlan(unique_ptr<Plan> in)
+        : input(std::move(in)) {}
+
+};
+
+struct SelectColumnProjectionPlan : Plan {
+    unique_ptr<Plan> input;
+    
+    SelectColumnProjectionPlan(unique_ptr<Plan> in)
+        : input(std::move(in)) {}
+
+};
 
 struct FilterPlan : Plan {
     unique_ptr<Plan> input;

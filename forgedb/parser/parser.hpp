@@ -9,6 +9,8 @@
 #define parser_hpp
 
 #include <stdio.h>
+#include <vector>
+
 #include "../token/Token.hpp"
 #include "statements/statement/Statement.hpp"
 #include "statements/select/Select.hpp"
@@ -18,6 +20,7 @@ class Parser {
 public:
     Parser(vector<Token>& tokens) : tokens(tokens) {}
     void parse();
+    std::vector<unique_ptr<Statement>> stmts;
     
 private:
     const std::vector<Token>& tokens;

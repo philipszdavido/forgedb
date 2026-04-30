@@ -24,6 +24,14 @@ struct TableColumn {
     bool isSelect;
     vector<string> columns;
     unique_ptr<Select> selectColmun;
+    
+    TableColumn() = default;
+
+        TableColumn(TableColumn&&) = default;
+        TableColumn& operator=(TableColumn&&) = default;
+
+        TableColumn(const TableColumn&) = delete;
+        TableColumn& operator=(const TableColumn&) = delete;
 };
 
 class Select : public Statement {
@@ -31,12 +39,20 @@ public:
     TableColumn column;
     string table;
     Where where;
-//    groupBy;
-//    having;
-//    orderBy;
-//    selFlags;
+    //    groupBy;
+    //    having;
+    //    orderBy;
+    //    selFlags;
     int limit;
     int offset;
+    
+    Select() = default;
+    
+    Select(Select&&) = default;
+    Select& operator=(Select&&) = default;
+    
+    Select(const Select&) = delete;
+    Select& operator=(const Select&) = delete;
 };
 
 #endif /* Select_hpp */

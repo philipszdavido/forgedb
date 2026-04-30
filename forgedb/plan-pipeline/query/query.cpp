@@ -19,3 +19,9 @@ void runQuery(Select& stmt, unordered_map<string, Table>& db) {
         cout << endl;
     }
 }
+
+void runStmtQuery(Statement* stmt, unordered_map<string, Table>& db) {
+    if (auto* select = dynamic_cast<Select*>(stmt)) {
+        runQuery(*select, db);
+    }
+}

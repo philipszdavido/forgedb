@@ -11,7 +11,8 @@
 #include <stdio.h>
 
 class Statement {
-//    virtual ~Statement() = default;
+public:
+    virtual ~Statement() = default;
 };
 
 #endif /* Statement_hpp */
