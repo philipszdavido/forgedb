@@ -24,6 +24,7 @@ void Parser::parse() {
 
 unique_ptr<Select> Parser::parseSelect() {
     unique_ptr<Select> select = make_unique<Select>();
+    select->limit = -1;
     
     consumeToken(current(), "Expected SELECT");
     
@@ -58,6 +59,8 @@ unique_ptr<Select> Parser::parseSelect() {
         select->column.columns = cols;
     }
     
+    advance();
+    
     if (current().type == TokenType::KEYWORD && current().value == "FROM") {
         
         // pick the table
@@ -72,7 +75,7 @@ unique_ptr<Select> Parser::parseSelect() {
         
         auto where = make_unique<Where>();
         
-        // consume till hit a keyword
+        // consume till we hit a keyword
         while (true) {
             if (current().type == TokenType::KEYWORD || eof()) {
                 break;

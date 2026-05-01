@@ -16,16 +16,19 @@
 Table users = {
     { {"id", "1"}, {"name", "Alice"}, {"age", "25"} },
     { {"id", "2"}, {"name", "Bob"},   {"age", "17"} },
-    { {"id", "3"}, {"name", "Eve"},   {"age", "30"} }
+    { {"id", "3"}, {"name", "Eve"},   {"age", "30"} },
+    { {"id", "4"}, {"name", "Nnamdi"},   {"age", "34"} }
 };
 
-unordered_map<string, Table> db = { { "users", users } };
+unordered_map<string, Table> db = {
+    { "users", users }
+};
 
 int main(int argc, const char * argv[]) {
-    
+//    SELECT (SELECT * FROM table) FROM users
+
     const string sql = R"(
-SELECT (SELECT * FROM table) FROM users
-SELECT * FROM table
+SELECT * FROM users
 )";
     
     Lexer _lex(sql);

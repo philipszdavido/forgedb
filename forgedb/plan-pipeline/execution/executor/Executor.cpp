@@ -20,6 +20,10 @@ unique_ptr<Executor> buildExecutor(Plan* plan,
         );
     }
 
+    if (auto starProj = dynamic_cast<StarColumnProjectionPlan*>(plan)) {
+        return make_unique<StarColumnProjectionExecutor>(buildExecutor(starProj->input.get(), db));
+    }
+    
     if (auto proj = dynamic_cast<ProjectionPlan*>(plan)) {
         return make_unique<ProjectionExecutor>(
             buildExecutor(proj->input.get(), db),

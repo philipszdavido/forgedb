@@ -26,12 +26,12 @@ struct TableColumn {
     unique_ptr<Select> selectColmun;
     
     TableColumn() = default;
-
-        TableColumn(TableColumn&&) = default;
-        TableColumn& operator=(TableColumn&&) = default;
-
-        TableColumn(const TableColumn&) = delete;
-        TableColumn& operator=(const TableColumn&) = delete;
+    
+    TableColumn(TableColumn&&) = default;
+    TableColumn& operator=(TableColumn&&) = default;
+    
+    TableColumn(const TableColumn&) = delete;
+    TableColumn& operator=(const TableColumn&) = delete;
 };
 
 class Select : public Statement {
@@ -39,12 +39,12 @@ public:
     TableColumn column;
     string table;
     Where where;
-    //    groupBy;
-    //    having;
-    //    orderBy;
+    //    groupBy; // Separates rows into groups based on the values in the grouping columns
+    //    having; // Filters out groups that don’t satisfy the search condition
+    //    orderBy; // Sorts the results of prior clauses to produce final output
     //    selFlags;
-    int limit;
-    int offset;
+    int limit = -1;
+    int offset = -1;
     
     Select() = default;
     
