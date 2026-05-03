@@ -37,10 +37,21 @@ vector<Token> Lexer::lex() {
                 break;
                 
             case '<':
+                if (matchNext('=')) {
+                    add(TokenType::LT_EQUAL, "<=");
+                    break;
+                }
+                
                 add(TokenType::LT, c);
                 break;
                 
             case '>':
+                
+                if (matchNext('=')) {
+                    add(TokenType::GT_EQUAL, ">=");
+                    break;
+                }
+                
                 add(TokenType::GT, c);
                 break;
                 
@@ -117,6 +128,16 @@ void Lexer::collectDigit() {
     
     index--;
 
+}
+
+bool Lexer::matchNext(const char c) {
+    const int next = index + 1;
+    
+    if (sql[next] == c) {
+        advance();
+        return true;
+    }
+    return false;
 }
 
 char Lexer::current() { return eof() ? '\0' : sql[index]; }

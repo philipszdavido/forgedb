@@ -36,6 +36,8 @@ private:
     bool isDigit(char c);
     bool isAlpha(char c);
     
+    bool matchNext(const char c);
+    
     char current();
     char next(int offset = 1);
     void advance();

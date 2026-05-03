@@ -14,6 +14,8 @@
 #include "../token/Token.hpp"
 #include "statements/statement/Statement.hpp"
 #include "statements/select/Select.hpp"
+#include "expressions/includes.h"
+#include "expressions/Binary/Binary.hpp"
 
 class Parser {
     
@@ -34,7 +36,13 @@ private:
     void advance();
     bool eof();
     bool match(TokenType type);
-
+    
+    unique_ptr<Expression> parsePrimary();
+    unique_ptr<Expression> parseBinary();
+    unique_ptr<Expression> parseExpression();
+    
+    bool checkValues(std::initializer_list<string> values);
+    bool check(std::string value);
 };
 
 #endif /* parser_hpp */

@@ -38,7 +38,7 @@ class Select : public Statement {
 public:
     TableColumn column;
     string table;
-    Where where;
+    unique_ptr<Where> where;
     //    groupBy; // Separates rows into groups based on the values in the grouping columns
     //    having; // Filters out groups that don’t satisfy the search condition
     //    orderBy; // Sorts the results of prior clauses to produce final output

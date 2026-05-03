@@ -44,6 +44,8 @@ enum class TokenType {
     
     AND, STAR,
     
+    GT_EQUAL, LT_EQUAL,
+    
     KEYWORD,
     SECOUNDARY_KEYWORD,
 

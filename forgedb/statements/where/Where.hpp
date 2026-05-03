@@ -21,7 +21,9 @@ public:
     Op op;
     std::unique_ptr<Expression> lhs;
     std::unique_ptr<Expression> rhs;
-    
+
+    std::unique_ptr<Expression> expression;
+
     Where* clone() {
         
         auto where = new Where();

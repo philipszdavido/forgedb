@@ -66,7 +66,7 @@ unique_ptr<Select> Parser::parseSelect() {
         // pick the table
         consumeToken(current(), "Expected 'FROM'");
         select->table = current().value;
-        
+        advance();
     }
     
     // pick WHERE
@@ -80,12 +80,62 @@ unique_ptr<Select> Parser::parseSelect() {
             if (current().type == TokenType::KEYWORD || eof()) {
                 break;
             }
+            unique_ptr<Expression> expr = parseExpression();
+            where->expression = std::move(expr);
+            break;
         }
-        
+        select->where = std::move(where);
     }
     
     return select;
     
+}
+
+unique_ptr<Expression> Parser::parseExpression() {
+    
+    return parseBinary();
+    
+}
+
+unique_ptr<Expression> Parser::parseBinary() {
+    
+    auto left = parsePrimary();
+        
+    while(checkValues({">", ">=", "<", "<=", "==", "!=", "AND", "OR"})) {
+        Token token = tokens[index - 1];
+        auto expr = parseBinary();
+        left = make_unique<BinaryExpression>(std::move(left), toBinaryOp(token.value), std::move(expr));
+    }
+    
+    return left;
+
+}
+
+unique_ptr<Expression> Parser::parsePrimary() {
+    
+    Token token = current();
+    
+    if (token.type == TokenType::STRING) {
+        advance();
+        return make_unique<Literal>(token.value);
+    }
+    
+    if (token.type == TokenType::NUMBER) {
+        advance();
+        return make_unique<Literal>(token.value);
+    }
+    
+    throw runtime_error("Unknown op.");
+}
+
+bool Parser::checkValues(std::initializer_list<string> values) {
+    for (auto t : values) {
+        if (check(t)) {
+            advance();
+            return true;
+        }
+    }
+    return false;
 }
 
 void Parser::consumeToken(Token token, string msgError) {
@@ -117,4 +167,9 @@ bool Parser::match(TokenType type) {
     advance();
     return true;
 
+}
+
+bool Parser::check(std::string type) {
+    if (eof()) return false;
+    return current().value == type;
 }

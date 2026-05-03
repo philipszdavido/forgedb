@@ -31,6 +31,12 @@ void printTokenType(TokenType type) {
         case TokenType::AND: std::cout << "AND"; break;
         case TokenType::STAR: std::cout << "STAR"; break;
         case TokenType::KEYWORD: std::cout << "KEYWORD"; break;
+            
+        case TokenType::LT: std::cout << "LESS_THAN"; break;
+        case TokenType::GT: std::cout << "GREATER_THAN"; break;
+        case TokenType::EQUALS: std::cout << "EQUALS"; break;
+        case TokenType::GT_EQUAL: std::cout << "GT_EQUAL"; break;
+        case TokenType::LT_EQUAL: std::cout << "LT_EQUAL"; break;
 
         case TokenType::NUMBER: std::cout << "NUMBER"; break;
         case TokenType::DIMENSION: std::cout << "DIMENSION"; break;
