@@ -25,6 +25,7 @@ enum class BinaryOp {
 };
 
 BinaryOp toBinaryOp(const string op);
+std::string opToString(BinaryOp op);
 
 class BinaryExpression : public Expression {
 public:
@@ -35,7 +36,7 @@ public:
     BinaryExpression(std::unique_ptr<Expression> l, BinaryOp o, std::unique_ptr<Expression> r) : left(std::move(l)), op(o), right(std::move(r)) {}
     
     std::string toString() const {
-        return "";
+        return "(" + left->toString() + " " + opToString(op) + " " + right->toString() + ")";
     }
 };
 

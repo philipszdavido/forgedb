@@ -41,6 +41,10 @@ private:
     unique_ptr<Expression> parseBinary();
     unique_ptr<Expression> parseExpression();
     
+    unique_ptr<Expression> parseOr();
+    unique_ptr<Expression> parseAnd();
+    unique_ptr<Expression> parseComparison();
+    
     bool checkValues(std::initializer_list<string> values);
     bool check(std::string value);
 };

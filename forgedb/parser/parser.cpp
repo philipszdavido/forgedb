@@ -93,7 +93,7 @@ unique_ptr<Select> Parser::parseSelect() {
 
 unique_ptr<Expression> Parser::parseExpression() {
     
-    return parseBinary();
+    return parseOr();
     
 }
 
@@ -103,12 +103,62 @@ unique_ptr<Expression> Parser::parseBinary() {
         
     while(checkValues({">", ">=", "<", "<=", "==", "!=", "AND", "OR"})) {
         Token token = tokens[index - 1];
-        auto expr = parseBinary();
+        auto expr = parsePrimary();
         left = make_unique<BinaryExpression>(std::move(left), toBinaryOp(token.value), std::move(expr));
     }
     
     return left;
 
+}
+
+unique_ptr<Expression> Parser::parseOr() {
+    auto left = parseAnd();
+
+    while (checkValues({"OR"})) {
+        auto right = parseAnd();
+
+        left = make_unique<BinaryExpression>(
+            std::move(left),
+            BinaryOp::OR,
+            std::move(right)
+        );
+    }
+
+    return left;
+}
+
+unique_ptr<Expression> Parser::parseAnd() {
+    auto left = parseComparison();
+
+    while (checkValues({"AND"})) {
+        auto right = parseComparison();
+
+        left = make_unique<BinaryExpression>(
+            std::move(left),
+            BinaryOp::AND,
+            std::move(right)
+        );
+    }
+
+    return left;
+}
+
+unique_ptr<Expression> Parser::parseComparison() {
+    auto left = parsePrimary();
+
+    while (checkValues({">", ">=", "<", "<=", "==", "!="})) {
+        Token token = tokens[index - 1];
+
+        auto right = parsePrimary();
+
+        left = make_unique<BinaryExpression>(
+            std::move(left),
+            toBinaryOp(token.value),
+            std::move(right)
+        );
+    }
+
+    return left;
 }
 
 unique_ptr<Expression> Parser::parsePrimary() {
@@ -123,6 +173,11 @@ unique_ptr<Expression> Parser::parsePrimary() {
     if (token.type == TokenType::NUMBER) {
         advance();
         return make_unique<Literal>(token.value);
+    }
+    
+    if (token.type == TokenType::IDENT) {
+        advance();
+        return make_unique<Identifier>(token.value);
     }
     
     throw runtime_error("Unknown op.");

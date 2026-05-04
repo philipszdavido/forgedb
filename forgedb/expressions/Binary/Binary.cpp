@@ -33,3 +33,14 @@ BinaryOp toBinaryOp(const string op) {
     
     return binOp;
 }
+
+std::string opToString(BinaryOp op) {
+    switch(op) {
+        case BinaryOp::GT: return ">";
+        case BinaryOp::LT: return "<";
+        case BinaryOp::EQ: return "==";
+        case BinaryOp::AND: return "AND";
+        case BinaryOp::OR: return "OR";
+        default: return "?";
+    }
+}

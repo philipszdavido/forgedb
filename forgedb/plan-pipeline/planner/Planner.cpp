@@ -11,9 +11,10 @@ unique_ptr<Plan> buildPlan(const Select& stmt) {
     
     unique_ptr<Plan> plan = make_unique<ScanPlan>(stmt.table);
     
-//    if (stmt.where) {
-//        plan = make_unique<FilterPlan>(std::move(plan), unique_ptr<Expression>(stmt.where->clone()));
-//    }
+    if (stmt.where) {
+        plan = make_unique<FilterPlan>(std::move(plan),
+                                       unique_ptr<Expression>(std::move(stmt.where->expression)));
+    }
     
     if (stmt.column.isStar) {
         plan = make_unique<StarColumnProjectionPlan>(std::move(plan));

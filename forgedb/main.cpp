@@ -28,7 +28,7 @@ int main(int argc, const char * argv[]) {
 //    SELECT (SELECT * FROM table) FROM users
 
     const string sql = R"(
-SELECT * FROM users WHERE age <= 20
+SELECT * FROM users WHERE age <= 20 AND 30 > 9 OR 7 = 90
 )";
     
     Lexer _lex(sql);

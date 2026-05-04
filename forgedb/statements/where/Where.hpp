@@ -32,6 +32,8 @@ public:
         where->lhs = std::move(this->lhs);
         where->rhs = std::move(this->rhs);
         
+        where->expression = std::move(this->expression);
+        
         return where;
         
     }

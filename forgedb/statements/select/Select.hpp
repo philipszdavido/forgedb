@@ -34,6 +34,14 @@ struct TableColumn {
     TableColumn& operator=(const TableColumn&) = delete;
 };
 
+//Execution order:
+//
+//FROM
+//WHERE (filter rows)
+//GROUP BY (create groups)
+//HAVING (filter groups)
+//SELECT
+
 class Select : public Statement {
 public:
     TableColumn column;
