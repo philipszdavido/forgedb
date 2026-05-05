@@ -12,6 +12,8 @@
 #include "./token/Token.hpp"
 #include "plan-pipeline/plans/BasePlan/Plan.hpp"
 #include "plan-pipeline/query/query.hpp"
+#include "vm/vm.hpp"
+#include "vm/generator/generator.hpp"
 
 Table users = {
     { {"id", "1"}, {"name", "Alice"}, {"age", "25"} },
@@ -27,6 +29,11 @@ unordered_map<string, Table> db = {
 int main(int argc, const char * argv[]) {
 //    SELECT (SELECT * FROM table) FROM users
 
+//    SELECT customer, SUM(amount)
+//    FROM orders
+//    GROUP BY customer
+//    HAVING SUM(amount) > 50;
+    
     const string sql = R"(
 SELECT * FROM users WHERE age <= 20 AND 30 > 9 OR 7 = 90
 )";
@@ -45,8 +52,12 @@ SELECT * FROM users WHERE age <= 20 AND 30 > 9 OR 7 = 90
     vector<unique_ptr<Statement>> stmts = std::move(parser.stmts);
     
     for (int i = 0; i < stmts.size(); i++) {
+        GeneratorOpCode gen;
         unique_ptr<Statement> stmt = std::move(stmts[i]);
-        runStmtQuery(stmt.get(), db);
+        
+        gen.buildStmtOpcodes(stmt.get());
+        runVM(db, &gen.chunk);
+        // runStmtQuery(stmt.get(), db);
     }
     
     return EXIT_SUCCESS;

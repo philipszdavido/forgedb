@@ -13,17 +13,27 @@
 #include "vm/opcode/opcode.hpp"
 #include "plan-pipeline/plans/BasePlan/Plan.hpp"
 
+void runVM(unordered_map<string, Table>& db, Chunk* chunk);
+
 class Rabbit {
+
 public:
     Rabbit(unordered_map<string, Table>& db) : db(db) {};
     void run();
+    void setChunk(Chunk* c);
+    
 private:
     int pc = 0;
     bool running = true;
+    
+    Row tempRow;
+    int rowIndex = 0;
     vector<Value> stack;
     Chunk* chunk;
-    Table table;
+    Table* table;
+    Table tempTable;
     unordered_map<string, Table>& db;
+    
 };
 
 #endif /* vm_hpp */

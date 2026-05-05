@@ -21,7 +21,7 @@ void runQuery(Select& stmt, unordered_map<string, Table>& db) {
 }
 
 void runStmtQuery(Statement* stmt, unordered_map<string, Table>& db) {
-    if (auto* select = dynamic_cast<Select*>(stmt)) {
+    if (Select* select = dynamic_cast<Select*>(stmt)) {
         runQuery(*select, db);
     }
 }

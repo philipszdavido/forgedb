@@ -15,16 +15,18 @@
 
 class GeneratorOpCode {
 public:
-    void buildOpcodes(const Select& stmt);
+    void buildOpcodes(Select& stmt);
+    void buildStmtOpcodes(Statement* stmt);
+    Chunk chunk;
 private:
     template<typename X>
     Value buildValue();
-    vector<uint8_t> code;
-    vector<Value> constants;
     
     int emit(uint8_t c);
     int emitCode(OpCode code);
     int emitConstant(Value v);
+    int emitConstantInt(size_t i);
+    
 };
 
 #endif /* generator_hpp */

@@ -17,6 +17,8 @@ enum class OpCode : uint8_t {
     SelectAllColumns,
     SelectColumn,
     Jump, // Jump index
+    SetRowToTempTable,
+    IncrementRowIndex,
     Halt
 };
 

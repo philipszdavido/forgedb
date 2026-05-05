@@ -33,8 +33,9 @@ struct Value {
 };
 
 struct Chunk {
+public:
     std::vector<uint8_t> code;
-    std::vector<Value> constant;
+    std::vector<Value> constants;
 };
 
 #endif /* Chunk_hpp */
