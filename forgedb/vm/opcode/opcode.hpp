@@ -11,15 +11,20 @@
 #include <stdio.h>
 #include <cstdint>
 
-enum class OpCode : uint8_t {
-    SetTable,
-    Push,
-    SelectAllColumns,
-    SelectColumn,
-    Jump, // Jump index
-    SetRowToTempTable,
-    IncrementRowIndex,
-    Halt
+#define OPCODE_LIST(OP) \
+    OP(SetTable) \
+    OP(Push) \
+    OP(SelectAllColumns) \
+    OP(SelectColumn) \
+    OP(SetRowToTempTable) \
+    OP(IncrementRowIndex) \
+    OP(Jump) \
+    OP(Halt)
+
+enum OpCode {
+    #define OP(name) name,
+        OPCODE_LIST(OP)
+    #undef OP
 };
 
 #endif /* opcode_hpp */

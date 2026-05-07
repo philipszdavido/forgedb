@@ -13,7 +13,7 @@
 #include "vm/opcode/opcode.hpp"
 #include "plan-pipeline/plans/BasePlan/Plan.hpp"
 
-void runVM(unordered_map<string, Table>& db, Chunk* chunk);
+void runVM(unordered_map<string, Table>& db, const Chunk* chunk);
 
 class Rabbit {
 

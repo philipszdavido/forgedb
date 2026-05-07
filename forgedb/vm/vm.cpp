@@ -16,9 +16,9 @@ void runVM(unordered_map<string, Table>& db, Chunk* chunk) {
 }
 
 //Table users = {
-//    { {"id", "1"}, {"name", "Alice"}, {"age", "25"} },
-//    { {"id", "2"}, {"name", "Bob"},   {"age", "17"} },
-//    { {"id", "3"}, {"name", "Eve"},   {"age", "30"} }
+//    { {"id", "1"}, {"name", "Alice"}, {"age", "25"} }, Row 1
+//    { {"id", "2"}, {"name", "Bob"},   {"age", "17"} }, Row 2
+//    { {"id", "3"}, {"name", "Eve"},   {"age", "30"} } Row 3
 //};
 
 void Rabbit::run() {
@@ -32,20 +32,20 @@ void Rabbit::run() {
             case OpCode::SetTable: {
                 
                 Value tableName = chunk->constants[chunk->code[pc]];
-                *table = db[tableName.getStringValue()];
+                table = &db[tableName.getStringValue()];
                 
                 break;
             }
                 
             case OpCode::Push: {
-                Value v = chunk->constants[chunk->code[pc++]];
+                Value v = chunk->constants[chunk->code[pc]];
 
                 stack.push_back(v);
                 break;
             }
                 
             case OpCode::SelectAllColumns: {
-                tempRow = tempTable[rowIndex];
+                Row projected;
                 break;
             }
                 
