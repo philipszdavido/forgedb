@@ -12,13 +12,21 @@
 #include "statements/includes.h"
 #include "vm/opcode/opcode.hpp"
 #include "vm/chunk/Chunk.hpp"
+#include "expressions/Binary/Binary.hpp"
+#include "expressions/Literal/Literal.hpp"
+#include "expressions/Identifier/Identifier.hpp"
 
 class GeneratorOpCode {
 public:
     void buildOpcodes(Select& stmt);
     void buildStmtOpcodes(Statement* stmt);
-    Chunk chunk;
+    void buildExpression(Expression* expr);
+    const Chunk* getChunk() const;
+
 private:
+    Chunk chunk;
+
+    // methods
     template<typename X>
     Value buildValue();
     
@@ -26,6 +34,9 @@ private:
     int emitCode(OpCode code);
     int emitConstant(Value v);
     int emitConstantInt(size_t i);
+    
+    void eval(Expression* expr);
+    void evalValue(Expression* expr);
     
 };
 

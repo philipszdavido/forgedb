@@ -24,10 +24,16 @@ void GeneratorOpCode::buildOpcodes(Select& stmt) {
     
     int loop_start;
     
+    if (stmt.where) {
+        buildExpression(stmt.where->expression.get());
+        emitCode(OpCode::Filter);
+    }
+    
     if (stmt.column.isStar) {
         loop_start = emitCode(OpCode::SelectAllColumns);
     } else if (stmt.column.isSelect) {
-        
+        buildStmtOpcodes(stmt.column.selectColmun.get());
+        loop_start = (int)chunk.code.size();
     } else {
         auto cols = stmt.column.columns;
         loop_start = (int)chunk.code.size();
@@ -48,6 +54,63 @@ void GeneratorOpCode::buildOpcodes(Select& stmt) {
     emitCode(OpCode::Jump);
     emit(emitConstantInt(loop_start));
         
+}
+
+void GeneratorOpCode::buildExpression(Expression* expr) {
+    
+}
+
+
+void GeneratorOpCode::eval(Expression* expr) {
+    if (auto bin = dynamic_cast<BinaryExpression*>(expr)) {
+        
+        evalValue(bin->left.get());
+        evalValue(bin->right.get());
+
+        switch (bin->op) {
+            case BinaryOp::EQ:
+                emitCode(OpCode::Equal);
+                break;
+            case BinaryOp::GT:
+                emitCode(OpCode::GreaterThan);
+                break;
+            case BinaryOp::LT:
+                emitCode(OpCode::LessThan);
+                break;
+            case BinaryOp::AND:
+                emitCode(OpCode::And);
+                break;
+            case BinaryOp::OR:
+                emitCode(OpCode::Or);
+                break;
+            default:
+                break;
+        }
+    }
+}
+
+void GeneratorOpCode::evalValue(Expression* expr) {
+    
+    if (auto id = dynamic_cast<Identifier*>(expr)) {
+        emitCode(OpCode::Push);
+        
+    }
+    
+    if (auto lit = dynamic_cast<Literal*>(expr)) {
+        emitCode(OpCode::Push);
+        Value x = lit->value;
+        emit(emitConstant(x));
+    }
+    
+    if (auto bin = dynamic_cast<BinaryExpression*>(expr)) {
+        eval(bin);
+    }
+    
+    throw runtime_error("Invalid expression");
+}
+
+const Chunk* GeneratorOpCode::getChunk() const {
+    return &chunk;
 }
 
 template <typename X>

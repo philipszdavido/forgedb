@@ -7,7 +7,7 @@
 
 #include "vm.hpp"
 
-void runVM(unordered_map<string, Table>& db, Chunk* chunk) {
+void runVM(unordered_map<string, Table>& db, const Chunk* chunk) {
     
     Rabbit vm(db);
         
@@ -26,34 +26,36 @@ void Rabbit::run() {
     while(running) {
         
         OpCode op = static_cast<OpCode>(chunk->code[pc++]);
-        int rowIndex = 0;
         
         switch (op) {
             case OpCode::SetTable: {
                 
-                Value tableName = chunk->constants[chunk->code[pc]];
+                Value tableName = chunk->constants[chunk->code[pc++]];
                 table = &db[tableName.getStringValue()];
                 
                 break;
             }
                 
             case OpCode::Push: {
+                
                 Value v = chunk->constants[chunk->code[pc]];
-
                 stack.push_back(v);
+                
                 break;
             }
                 
             case OpCode::SelectAllColumns: {
-                Row projected;
+                tempRow = (*table)[rowIndex];
                 break;
             }
                 
             case OpCode::SelectColumn: {
                 Row projected;
                 for (Value col : stack) {
-                    projected[col.getStringValue()] = tempRow[col.getStringValue()];
+                    std::string columnName = col.getStringValue();
+                    projected[columnName] = (*table)[rowIndex][columnName];
                 }
+                tempRow = projected;
                 break;
             }
                 
@@ -68,8 +70,14 @@ void Rabbit::run() {
             }
                 
             case OpCode::Jump: {
-                Value label = chunk->constants[chunk->code[pc]];
+                
+                if (rowIndex >= table->size()) {
+                    return;
+                }
+
+                Value label = chunk->constants[chunk->code[pc++]];
                 pc = (int)label.getIntValue();
+                
                 break;
             }
 
@@ -81,13 +89,11 @@ void Rabbit::run() {
             default:
                 break;
         }
-        
-        pc++;
-        
+                
     }
     
 }
 
-void Rabbit::setChunk(Chunk* c) {
+void Rabbit::setChunk(const Chunk* c) {
     chunk = c;
 }

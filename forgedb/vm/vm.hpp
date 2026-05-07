@@ -20,7 +20,7 @@ class Rabbit {
 public:
     Rabbit(unordered_map<string, Table>& db) : db(db) {};
     void run();
-    void setChunk(Chunk* c);
+    void setChunk(const Chunk* c);
     
 private:
     int pc = 0;
@@ -29,7 +29,7 @@ private:
     Row tempRow;
     int rowIndex = 0;
     vector<Value> stack;
-    Chunk* chunk;
+    const Chunk* chunk;
     Table* table;
     Table tempTable;
     unordered_map<string, Table>& db;

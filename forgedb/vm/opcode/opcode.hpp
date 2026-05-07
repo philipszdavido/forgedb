@@ -16,8 +16,17 @@
     OP(Push) \
     OP(SelectAllColumns) \
     OP(SelectColumn) \
+    OP(Filter) \
     OP(SetRowToTempTable) \
     OP(IncrementRowIndex) \
+    OP(GreaterThan) \
+    OP(LessThan) \
+    OP(GreaterThanOrEqual) \
+    OP(LessThanOrEqual) \
+    OP(Or) \
+    OP(And) \
+    OP(Equal) \
+    OP(NotEqual) \
     OP(Jump) \
     OP(Halt)
 
