@@ -21,6 +21,22 @@ void runVM(unordered_map<string, Table>& db, const Chunk* chunk) {
 //    { {"id", "3"}, {"name", "Eve"},   {"age", "30"} } Row 3
 //};
 
+#define BINARY_COMPARE(op) \
+{ \
+    Value rhs = pop(); \
+    Value lhs = pop(); \
+    push(Value(lhs.getIntValue() op rhs.getIntValue())); \
+    break; \
+}
+
+#define BINARY_LOGIC(op) \
+{ \
+    Value rhs = pop(); \
+    Value lhs = pop(); \
+    push(Value(lhs.getBoolValue() op rhs.getBoolValue())); \
+    break; \
+}
+
 void Rabbit::run() {
     
     while(running) {
@@ -83,34 +99,58 @@ void Rabbit::run() {
                 
                 // Conditionals
             case OpCode::GreaterThan: {
+                
+                BINARY_COMPARE(>);
+                
                 break;
             }
                 
             case OpCode::LessThan: {
+                
+                BINARY_COMPARE(<);
+
                 break;
             }
                 
             case OpCode::GreaterThanOrEqual: {
+                
+                BINARY_COMPARE(>=);
+                
                 break;
             }
                 
             case OpCode::LessThanOrEqual: {
+                
+                BINARY_COMPARE(<=);
+
                 break;
             }
                 
             case OpCode::Or: {
+                
+                BINARY_LOGIC(||);
+
                 break;
             }
                 
             case OpCode::And: {
+                
+                BINARY_LOGIC(&&);
+
                 break;
             }
                 
             case OpCode::Equal: {
+                
+                BINARY_COMPARE(==);
+
                 break;
             }
                 
             case OpCode::NotEqual: {
+                
+                BINARY_COMPARE(!=);
+
                 break;
             }
                 
@@ -152,6 +192,10 @@ void Rabbit::run() {
                 
     }
     
+}
+
+void Rabbit::push(Value x) {
+    stack.push_back(x);
 }
 
 Value Rabbit::pop() {

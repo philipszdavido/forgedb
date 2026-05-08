@@ -36,7 +36,7 @@ private:
     Row* currentRow = nullptr;
     
     Value pop();
-    
+    void push(Value x);
 };
 
 #endif /* vm_hpp */
