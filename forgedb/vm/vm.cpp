@@ -54,7 +54,7 @@ void Rabbit::run() {
                 
             case OpCode::Push: {
                 
-                Value v = chunk->constants[chunk->code[pc]];
+                Value v = chunk->constants[chunk->code[pc++]];
                 stack.push_back(v);
                 
                 break;
@@ -155,6 +155,11 @@ void Rabbit::run() {
             }
                 
             case OpCode::GetColumnValue: {
+                
+                Value x = pop();
+                Value v = (*currentRow)[x.getStringValue()];
+                push(v);
+                
                 break;
             }
                 

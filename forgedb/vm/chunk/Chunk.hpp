@@ -20,15 +20,54 @@ struct Value {
     Value(bool v) : data(v) {}
 
     size_t getIntValue() const {
-        return std::get<size_t>(data);
+
+        if (std::holds_alternative<size_t>(data)) {
+            return std::get<size_t>(data);
+        }
+
+        if (std::holds_alternative<std::string>(data)) {
+            return std::stoull(std::get<std::string>(data));
+        }
+
+        if (std::holds_alternative<bool>(data)) {
+            return std::get<bool>(data) ? 1 : 0;
+        }
+
+        throw std::runtime_error("Cannot convert to int");
     }
 
     std::string getStringValue() const {
-        return std::get<std::string>(data);
+
+        if (std::holds_alternative<std::string>(data)) {
+            return std::get<std::string>(data);
+        }
+
+        if (std::holds_alternative<size_t>(data)) {
+            return std::to_string(std::get<size_t>(data));
+        }
+
+        if (std::holds_alternative<bool>(data)) {
+            return std::get<bool>(data) ? "true" : "false";
+        }
+
+        throw std::runtime_error("Cannot convert to string");
     }
 
     bool getBoolValue() const {
-        return std::get<bool>(data);
+
+        if (std::holds_alternative<bool>(data)) {
+            return std::get<bool>(data);
+        }
+
+        if (std::holds_alternative<size_t>(data)) {
+            return std::get<size_t>(data) != 0;
+        }
+
+        if (std::holds_alternative<std::string>(data)) {
+            return !std::get<std::string>(data).empty();
+        }
+
+        throw std::runtime_error("Cannot convert to bool");
     }
 };
 

@@ -79,8 +79,14 @@ void GeneratorOpCode::eval(Expression* expr) {
             case BinaryOp::GT:
                 emitCode(OpCode::GreaterThan);
                 break;
+            case BinaryOp::GTE:
+                emitCode(OpCode::GreaterThanOrEqual);
+                break;
             case BinaryOp::LT:
                 emitCode(OpCode::LessThan);
+                break;
+            case BinaryOp::LTE:
+                emitCode(OpCode::LessThanOrEqual);
                 break;
             case BinaryOp::AND:
                 emitCode(OpCode::And);
@@ -100,7 +106,8 @@ void GeneratorOpCode::evalValue(Expression* expr) {
         
         emitCode(OpCode::Push);
         Value x = id->name;
-        emitConstant(x);
+        emit(emitConstant(x));
+        
         emitCode(OpCode::GetColumnValue);
         
     } else if (auto lit = dynamic_cast<Literal*>(expr)) {

@@ -107,7 +107,7 @@ void Lexer::collectIdentifier() {
     if (kw.size()) {
         add(TokenType::KEYWORD, ident);
     } else if(sec_kw.size()) add(TokenType::SECOUNDARY_KEYWORD, ident);
-    else add(TokenType::STRING, ident);
+    else add(TokenType::IDENT, ident);
     index--;
     
 }

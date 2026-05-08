@@ -11,7 +11,7 @@ BinaryOp toBinaryOp(const string op) {
     
     BinaryOp binOp;
     
-    if (op == "=") {
+    if (op == "=" || op == "==") {
         binOp = BinaryOp::EQ;
     } else if (op == "!=") {
         binOp = BinaryOp::NEQ;

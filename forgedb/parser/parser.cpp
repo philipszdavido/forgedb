@@ -146,7 +146,7 @@ unique_ptr<Expression> Parser::parseAnd() {
 unique_ptr<Expression> Parser::parseComparison() {
     auto left = parsePrimary();
 
-    while (checkValues({">", ">=", "<", "<=", "==", "!="})) {
+    while (checkValues({">", ">=", "<", "<=", "==", "!=", "="})) {
         Token token = tokens[index - 1];
 
         auto right = parsePrimary();

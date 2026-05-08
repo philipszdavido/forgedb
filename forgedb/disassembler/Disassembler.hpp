@@ -112,10 +112,11 @@ private:
 
             case OpCode::JumpIfFalse: {
                 uint8_t constIndex = chunk->code[pc++];
-                Value label = chunk->constants[constIndex];
+                // Value label = chunk->constants[constIndex];
+                int label = chunk->code[pc++];
 
                 std::cout << "JumpIfFalse -> "
-                          << label.getIntValue()
+                          << label // label.getIntValue()
                           << "\n";
                 break;
             }

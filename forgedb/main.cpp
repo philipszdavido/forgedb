@@ -14,6 +14,7 @@
 #include "plan-pipeline/query/query.hpp"
 #include "vm/vm.hpp"
 #include "vm/generator/generator.hpp"
+#include "disassembler/Disassembler.hpp"
 
 Table users = {
     { {"id", "1"}, {"name", "Alice"}, {"age", "25"} },
@@ -46,6 +47,7 @@ SELECT * FROM users WHERE age <= 20 AND 30 > 9 OR 7 = 90
         std::cout << ' ' << tokens[i].value << std::endl;
     }
     
+    Disassembler dissasembler;
     Parser parser(tokens);
     parser.parse();
 
@@ -56,8 +58,11 @@ SELECT * FROM users WHERE age <= 20 AND 30 > 9 OR 7 = 90
         unique_ptr<Statement> stmt = std::move(stmts[i]);
         
         gen.buildStmtOpcodes(stmt.get());
-        runVM(db, &gen.chunk);
+        dissasembler.disassemble(gen.getChunk());
+
+        runVM(db, (gen).getChunk());
         // runStmtQuery(stmt.get(), db);
+        
     }
     
     return EXIT_SUCCESS;
