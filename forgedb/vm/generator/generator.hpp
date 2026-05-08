@@ -27,9 +27,6 @@ private:
     Chunk chunk;
 
     // methods
-    template<typename X>
-    Value buildValue();
-    
     int emit(uint8_t c);
     int emitCode(OpCode code);
     int emitConstant(Value v);
@@ -37,7 +34,7 @@ private:
     
     void eval(Expression* expr);
     void evalValue(Expression* expr);
-    
+    void patchJump(int index);
 };
 
 #endif /* generator_hpp */

@@ -26,13 +26,16 @@ private:
     int pc = 0;
     bool running = true;
     
-    Row tempRow;
     int rowIndex = 0;
     vector<Value> stack;
     const Chunk* chunk;
     Table* table;
     Table tempTable;
     unordered_map<string, Table>& db;
+    
+    Row* currentRow = nullptr;
+    
+    Value pop();
     
 };
 

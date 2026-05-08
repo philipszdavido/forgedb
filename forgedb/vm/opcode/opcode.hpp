@@ -18,6 +18,7 @@
     OP(SelectColumn) \
     OP(Filter) \
     OP(SetRowToTempTable) \
+    OP(SetCurrentRow) \
     OP(IncrementRowIndex) \
     OP(GreaterThan) \
     OP(LessThan) \
@@ -27,7 +28,9 @@
     OP(And) \
     OP(Equal) \
     OP(NotEqual) \
+    OP(GetColumnValue) \
     OP(Jump) \
+    OP(JumpIfFalse) \
     OP(Halt)
 
 enum OpCode {

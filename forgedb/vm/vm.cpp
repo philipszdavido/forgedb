@@ -45,22 +45,34 @@ void Rabbit::run() {
             }
                 
             case OpCode::SelectAllColumns: {
-                tempRow = (*table)[rowIndex];
+                tempTable.push_back(*currentRow);
                 break;
             }
                 
             case OpCode::SelectColumn: {
                 Row projected;
+                
                 for (Value col : stack) {
+                    
                     std::string columnName = col.getStringValue();
-                    projected[columnName] = (*table)[rowIndex][columnName];
+                    
+                    projected[columnName] =
+                    (*currentRow)[columnName];
                 }
-                tempRow = projected;
+                
+                tempTable.push_back(projected);
+                
+                stack.clear();
                 break;
             }
                 
             case OpCode::SetRowToTempTable: {
-                tempTable.push_back(tempRow);
+                tempTable.push_back(*currentRow);
+                break;
+            }
+                
+            case OpCode::SetCurrentRow: {
+                currentRow = &(*table)[rowIndex];
                 break;
             }
                 
@@ -69,18 +81,66 @@ void Rabbit::run() {
                 break;
             }
                 
+                // Conditionals
+            case OpCode::GreaterThan: {
+                break;
+            }
+                
+            case OpCode::LessThan: {
+                break;
+            }
+                
+            case OpCode::GreaterThanOrEqual: {
+                break;
+            }
+                
+            case OpCode::LessThanOrEqual: {
+                break;
+            }
+                
+            case OpCode::Or: {
+                break;
+            }
+                
+            case OpCode::And: {
+                break;
+            }
+                
+            case OpCode::Equal: {
+                break;
+            }
+                
+            case OpCode::NotEqual: {
+                break;
+            }
+                
+            case OpCode::GetColumnValue: {
+                break;
+            }
+                
+            case OpCode::JumpIfFalse: {
+                // We pop from stack and check the result
+                Value x = pop();
+                
+                if (x.getBoolValue()) {
+                    Value label = chunk->constants[chunk->code[pc++]];
+                    pc = (int)label.getIntValue();
+                }
+                break;
+            }
+                
             case OpCode::Jump: {
                 
                 if (rowIndex >= table->size()) {
                     return;
                 }
-
+                
                 Value label = chunk->constants[chunk->code[pc++]];
                 pc = (int)label.getIntValue();
                 
                 break;
             }
-
+                
             case OpCode::Halt: {
                 running = false;
                 break;
@@ -92,6 +152,17 @@ void Rabbit::run() {
                 
     }
     
+}
+
+Value Rabbit::pop() {
+    
+    if (stack.empty()) {
+        throw runtime_error("Empty stack.");
+    }
+    
+    Value x = stack.back();
+    stack.pop_back();
+    return x;
 }
 
 void Rabbit::setChunk(const Chunk* c) {

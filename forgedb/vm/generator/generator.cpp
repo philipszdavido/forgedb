@@ -21,22 +21,23 @@ void GeneratorOpCode::buildOpcodes(Select& stmt) {
     
     emitCode(OpCode::SetTable);
     emit(index);
+
+    int loop_start = emitCode(OpCode::SetCurrentRow);;
     
-    int loop_start;
+    int jump = -1;
     
     if (stmt.where) {
-        buildExpression(stmt.where->expression.get());
-        emitCode(OpCode::Filter);
+         buildExpression(stmt.where->expression.get());
+         emitCode(OpCode::JumpIfFalse);
+        jump = emit(0);
     }
     
     if (stmt.column.isStar) {
-        loop_start = emitCode(OpCode::SelectAllColumns);
+        emitCode(OpCode::SelectAllColumns);
     } else if (stmt.column.isSelect) {
         buildStmtOpcodes(stmt.column.selectColmun.get());
-        loop_start = (int)chunk.code.size();
     } else {
         auto cols = stmt.column.columns;
-        loop_start = (int)chunk.code.size();
         
         for (auto col : cols) {
             Value v = col;
@@ -47,8 +48,12 @@ void GeneratorOpCode::buildOpcodes(Select& stmt) {
         
         emitCode(OpCode::SelectColumn);
     }
-
-    emitCode(OpCode::SetRowToTempTable);
+    
+    // we will jump to here
+    if (jump > -1) {
+        patchJump(jump);
+    }
+    
     emitCode(OpCode::IncrementRowIndex);
 
     emitCode(OpCode::Jump);
@@ -57,7 +62,7 @@ void GeneratorOpCode::buildOpcodes(Select& stmt) {
 }
 
 void GeneratorOpCode::buildExpression(Expression* expr) {
-    
+    eval(expr);
 }
 
 
@@ -92,30 +97,31 @@ void GeneratorOpCode::eval(Expression* expr) {
 void GeneratorOpCode::evalValue(Expression* expr) {
     
     if (auto id = dynamic_cast<Identifier*>(expr)) {
-        emitCode(OpCode::Push);
         
-    }
-    
-    if (auto lit = dynamic_cast<Literal*>(expr)) {
+        emitCode(OpCode::Push);
+        Value x = id->name;
+        emitConstant(x);
+        emitCode(OpCode::GetColumnValue);
+        
+    } else if (auto lit = dynamic_cast<Literal*>(expr)) {
+        
         emitCode(OpCode::Push);
         Value x = lit->value;
         emit(emitConstant(x));
-    }
-    
-    if (auto bin = dynamic_cast<BinaryExpression*>(expr)) {
+        
+    } else if (auto bin = dynamic_cast<BinaryExpression*>(expr)) {
+        
         eval(bin);
-    }
-    
-    throw runtime_error("Invalid expression");
+        
+    } else throw runtime_error("Invalid expression");
 }
 
 const Chunk* GeneratorOpCode::getChunk() const {
     return &chunk;
 }
 
-template <typename X>
-Value GeneratorOpCode::buildValue() {
-    
+void GeneratorOpCode::patchJump(int index) {
+    chunk.code[index] = (chunk.code.size() - 1);
 }
 
 int GeneratorOpCode::emitConstantInt(size_t i) {
