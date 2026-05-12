@@ -11,71 +11,156 @@
 #include <stdio.h>
 #include <string>
 #include <vector>
+#include <memory>
 
 #include "statements/statement/Statement.hpp"
 #include "statements/where/Where.hpp"
+#include "expressions/Expression/Expression.hpp"
 
 using namespace std;
 
+// Execution order:
+// FROM
+// WHERE (filter rows)
+// GROUP BY (create groups)
+// HAVING (filter groups)
+// SELECT
+
+// SELECT customer, SUM(amount)
+// FROM orders
+// GROUP BY customer
+// HAVING SUM(amount) > 50;
+
+class Statement;
 class Select;
 
-struct TableColumn {
-    bool isStar;
-    bool isSelect;
-    vector<string> columns;
-    unique_ptr<Select> selectColmun;
-    
-    TableColumn() = default;
-    
-    TableColumn(TableColumn&&) = default;
-    TableColumn& operator=(TableColumn&&) = default;
-    
-    TableColumn(const TableColumn&) = delete;
-    TableColumn& operator=(const TableColumn&) = delete;
+class StarExpression : public Expression {
+public:
+
+    StarExpression() {}
+    std::string toString() const {
+        return "()";
+    }
+
 };
 
-struct Having {
+class ColumnExpression : public Expression {
+public:
+
+    string table;
+    string name;
+    string alias;
     
+    ColumnExpression() {}
+    std::string toString() const {
+        return "()";
+    }
+
 };
 
-struct GroupBy {
-//    vector<Value> parts;
-};
+class FunctionExpression : public Expression {
+public:
 
-struct OrderBy {
+    string name;
+    vector<unique_ptr<Expression>> args;
+    bool distinct = false;
     
+    FunctionExpression() {}
+    
+    std::string toString() const {
+        return "()";
+    }
+
 };
 
-//Execution order:
-//
-//FROM
-//WHERE (filter rows)
-//GROUP BY (create groups)
-//HAVING (filter groups)
-//SELECT
+enum class UnaryOp {
+    NOT,
+    NEGATE
+};
 
-//SELECT customer, SUM(amount)
-//FROM orders
-//GROUP BY customer
-//HAVING SUM(amount) > 50;
+class UnaryExpression : public Expression {
+public:
+    UnaryOp op;
+    unique_ptr<Expression> expr;
+    
+    UnaryExpression() {}
+    std::string toString() const {
+        return "()";
+    }
+
+};
+
+struct SelectItem {
+    unique_ptr<Expression> expr;
+    string alias;
+};
+
+enum class TableType {
+    TABLE,
+    SUBQUERY
+};
+
+struct TableRef {
+    TableType type = TableType::TABLE;
+
+    string name;
+    string alias;
+
+    unique_ptr<Select> subquery;
+};
+
+enum class JoinType {
+    INNER,
+    LEFT,
+    RIGHT,
+    FULL,
+    CROSS
+};
+
+struct Join {
+    JoinType type;
+
+    TableRef table;
+
+    unique_ptr<Expression> on;
+};
+
+enum class OrderDirection {
+    ASC,
+    DESC
+};
+
+struct OrderItem {
+    unique_ptr<Expression> expr;
+    OrderDirection direction = OrderDirection::ASC;
+};
 
 class Select : public Statement {
 public:
-    TableColumn column;
-    string table;
-    unique_ptr<Where> where;
-    unique_ptr<GroupBy> groupBy; // Separates rows into groups based on the values in the grouping columns
-    unique_ptr<Having> having; // Filters out groups that don’t satisfy the search condition
-    unique_ptr<OrderBy> orderBy; // Sorts the results of prior clauses to produce final output
-    //    selFlags;
+
+    vector<SelectItem> columns;
+
+    TableRef from;
+
+    vector<Join> joins;
+
+    unique_ptr<Expression> where;
+
+    vector<unique_ptr<Expression>> groupBy;
+
+    unique_ptr<Expression> having;
+
+    vector<OrderItem> orderBy;
+
     int limit = -1;
     int offset = -1;
-    
+
+public:
     Select() = default;
-    
+
     Select(Select&&) = default;
     Select& operator=(Select&&) = default;
-    
+
     Select(const Select&) = delete;
     Select& operator=(const Select&) = delete;
 };

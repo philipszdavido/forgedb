@@ -15,39 +15,39 @@ void GeneratorOpCode::buildStmtOpcodes(Statement* stmt) {
 
 void GeneratorOpCode::buildOpcodes(Select& stmt) {
     
-    Value x = stmt.table;
-    
-    int index = emitConstant(x);
+//    Value x = stmt.table;
+//    
+//    int index = emitConstant(x);
     
     emitCode(OpCode::SetTable);
-    emit(index);
+//    emit(index);
 
     int loop_start = emitCode(OpCode::SetCurrentRow);;
     
     int jump = -1;
     
-    if (stmt.where) {
-         buildExpression(stmt.where->expression.get());
-         emitCode(OpCode::JumpIfFalse);
-        jump = emit(0);
-    }
-    
-    if (stmt.column.isStar) {
-        emitCode(OpCode::SelectAllColumns);
-    } else if (stmt.column.isSelect) {
-        buildStmtOpcodes(stmt.column.selectColmun.get());
-    } else {
-        auto cols = stmt.column.columns;
-        
-        for (auto col : cols) {
-            Value v = col;
-            int index = emitConstant(v);
-            emitCode(OpCode::Push);
-            emit(index);
-        }
-        
-        emitCode(OpCode::SelectColumn);
-    }
+//    if (stmt.where) {
+//         buildExpression(stmt.where->expression.get());
+//         emitCode(OpCode::JumpIfFalse);
+//        jump = emit(0);
+//    }
+//    
+//    if (stmt.column.isStar) {
+//        emitCode(OpCode::SelectAllColumns);
+//    } else if (stmt.column.isSelect) {
+//        buildStmtOpcodes(stmt.column.selectColmun.get());
+//    } else {
+//        auto cols = stmt.column.columns;
+//        
+//        for (auto col : cols) {
+//            Value v = col;
+//            int index = emitConstant(v);
+//            emitCode(OpCode::Push);
+//            emit(index);
+//        }
+//        
+//        emitCode(OpCode::SelectColumn);
+//    }
     
     // we will jump to here
     if (jump > -1) {

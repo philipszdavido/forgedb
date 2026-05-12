@@ -27,7 +27,7 @@ public:
 private:
     const std::vector<Token>& tokens;
     size_t index = 0;
-
+    
     void consumeToken(Token token, string msgError);
     void consumeTokenType(TokenType type, string msgError);
     unique_ptr<Select> parseSelect();
@@ -36,6 +36,8 @@ private:
     void advance();
     bool eof();
     bool match(TokenType type);
+    
+    void parseFunctionCall();
     
     unique_ptr<Expression> parsePrimary();
     unique_ptr<Expression> parseBinary();
@@ -47,6 +49,37 @@ private:
     
     bool checkValues(std::initializer_list<string> values);
     bool check(std::string value);
+    
+    unique_ptr<Statement> parseStatement();
+    void consumeKeyword(string keyword);
+    
+    void parseSelectList(Select& select);
+    
+    void parseFrom(Select& select);
+    
+    void parseJoins(Select& select);
+    
+    void parseWhere(Select& select);
+    
+    void parseGroupBy(Select& select);
+    
+    void parseHaving(Select& select);
+    
+    void parseOrderBy(Select& select);
+    
+    void parseLimit(Select& select);
+    
+    void parseOffset(Select& select);
+    
+    bool checkKeyword(string keyword);
+    bool matchKeyword(string keyword);
+    
+    unique_ptr<Expression> parseTerm();
+    
+    unique_ptr<Expression> parseFactor();
+    
+    unique_ptr<Expression> parseUnary();
+    unique_ptr<Expression> parseEquality();
 };
 
 #endif /* parser_hpp */

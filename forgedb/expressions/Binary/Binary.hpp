@@ -21,7 +21,12 @@ enum class BinaryOp {
     GTE,    // >=
     LTE,    // <=
     AND,
-    OR
+    OR,
+    
+    ADD,
+    SUB,
+    MUL,
+    DIV
 };
 
 BinaryOp toBinaryOp(const string op);
@@ -34,7 +39,8 @@ public:
     unique_ptr<Expression> right;
     
     BinaryExpression(std::unique_ptr<Expression> l, BinaryOp o, std::unique_ptr<Expression> r) : left(std::move(l)), op(o), right(std::move(r)) {}
-    
+    BinaryExpression() {}
+
     std::string toString() const {
         return "(" + left->toString() + " " + opToString(op) + " " + right->toString() + ")";
     }

@@ -14,14 +14,19 @@ unordered_map<string, string> keywords = {
     { "DELETE", "DELETE" },
     { "FROM", "FROM" },
     
-    {"LIMIT", "LIMIT"},
-    {"OFFSET", "OFFSET"},
-    {"WHERE", "WHERE"}
+    { "LIMIT", "LIMIT" },
+    { "OFFSET", "OFFSET" },
+    { "WHERE", "WHERE" },
+    { "ORDER", "ORDER" },
+    { "HAVING", "HAVING" },
+    { "GROUP", "GROUP" },
+    { "BY", "BY" }
 };
 
 unordered_map<string, string> secondary_keywords = {
-    {"AS", "AS"},
-    {"OR", "OR"}
+    { "AS", "AS" },
+    { "OR", "OR" },
+    { "AND", "AND" }
 };
 
 Lexer::Lexer(const std::string& sql) : sql(sql) {}

@@ -19,6 +19,7 @@ public:
     string value;
 
     Literal(const string& val) : value(val) {}
+    Literal() {}
 
     string toString() const override {
         return "'" + value + "'";
